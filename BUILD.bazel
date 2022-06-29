@@ -1,8 +1,21 @@
 load("@pybind11_bazel//:build_defs.bzl", "pybind_extension", "pybind_library")
 
 pybind_library(
-    name = "hello",
+    name = "example",
     srcs = [
         "hello_world.cpp",
     ],
+)
+
+filegroup(
+    name = "libexample",
+    srcs = [":example"],
+    output_group = "dynamic_library",
+)
+
+genrule(
+    name = "gen_example",
+    srcs = [":libexample"],
+    outs = ["example.so"],
+    cmd = "readelf -a $(SRCS) >$@",
 )
